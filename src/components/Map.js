@@ -5,36 +5,17 @@ import MapGL, {Layer, Source} from 'react-map-gl';
 import tribalLands from '../data/tribal-geojson.json';
 import petroleumPipelines from '../data/petroleumproduct_pipelines_nov2014.json';
 import crudeOilPipelines from '../data/crudeoil_pipelines_nov2014.json';
+import Brownfields from '../data/re_atlas-epa_brownfields.json';
 
+// test
+import './Map.css';
 export default function Map() {
     const accessToken = "pk.eyJ1IjoiaW1ub3Rqb2huIiwiYSI6ImNqZ3RzNjdhdjB2a20ycXE5dHR3ODY2MGcifQ.mEpkk9ZAI1ncdwAOVDdYdw";
 
-    let [tribalLandIsVisible, toggleTribalLandIsVisible] = useState(true);
-    let [petroleumIsVisible, togglePetroleumIsVisible] = useState(true);
-    let [crudeOilIsVisible, toggleCrudeOilIsVisible] = useState(true);
-
-    const _handleKeyDown = (event) => {
-        switch(event.key) {
-            case "1":
-                toggleTribalLandIsVisible(!tribalLandIsVisible);
-                break;
-            case "2":
-                togglePetroleumIsVisible(!petroleumIsVisible);
-                break;
-            case "3":
-                toggleCrudeOilIsVisible(!crudeOilIsVisible);
-                break;
-            default:
-                break;
-        }
-    }
-
-    useEffect( () => {
-        window.addEventListener("keydown", _handleKeyDown);
-        return () => {
-            window.removeEventListener("keydown", _handleKeyDown);
-        }
-    }, [tribalLandIsVisible, petroleumIsVisible, crudeOilIsVisible]);
+    // let [tribalLandIsVisible, toggleTribalLandIsVisible] = useState(true);
+    // let [petroleumIsVisible, togglePetroleumIsVisible] = useState(true);
+    // let [crudeOilIsVisible, toggleCrudeOilIsVisible] = useState(true);
+    // let [BrownfieldsIsVisible, toggleBrownfieldsIsVisible] = useState(true);
 
     let [viewport, setViewport] = useState({
             bearing: 0,
@@ -42,8 +23,10 @@ export default function Map() {
             height: "100vh",
             latitude: 37.7577,
             longitude: -122.4376,
-            minZoom: 6,
-            maxZoom: 12,    
+            // represents zoom out:
+            minZoom: 3,
+            // represents zoom in:
+            maxZoom: 18,    
             pitch: 70,
             zoom: 8,
     });
@@ -70,8 +53,29 @@ export default function Map() {
         id: "point",
         type: "fill",
         paint: {
-            "fill-color": "#ff0090",
-            "fill-opacity": 0.3,
+            "fill-color": "#FF0DEF",
+            "fill-opacity": {
+                "stops":[
+                    [3,.7],
+                    [18,.1]
+                ]
+            }
+            //"fill-opacity": ["interpolate",
+            //["linear"], 
+            //["zoom"],
+            //3,
+            //[
+           //     "interpolate",
+            //    ["linear"],
+            //    .7,
+            //],
+            //18,
+            //[
+            //    "interpolate",
+            //    ["linear"],
+            //    .1,
+            //],
+        //]
         }
     };
 
@@ -79,7 +83,8 @@ export default function Map() {
         id: "petrol-line",
         type: "line",
         paint: {
-            "line-color": "#FF6700",
+            "line-color": "#FF0DEF",
+            //FF6700
             "line-opacity": 0.5,
             "line-width": 2,
         }
@@ -89,15 +94,47 @@ export default function Map() {
         id: "crude-line",
         type: "line",
         paint: {
-            "line-color": "#B026FF",
+            "line-color": "orange",
+            //B026FF
             "line-opacity": 0.5,
             "line-width": 2,
+        }
+    };
+
+    const BrownfieldsLayerStyles = {
+        id: "brownfields",
+        type: "circle",
+        paint: {
+            "circle-color": "#ffff00",
+            "circle-opacity": 0.8,
+            "circle-radius" : ["interpolate",
+                    ["linear"], 
+                    ["zoom"],
+                    3,
+                    [
+                        "interpolate",
+                        ["exponential", 2],
+                        ["get", "mapped_acr"],
+                        0, 1,
+                        1100000,1,
+                    ],
+                    9,
+                    [
+                        "interpolate",
+                        ["exponential", 2],
+                        ["get", "mapped_acr"],
+                        0, 10,
+                        1100000,200,
+                    ],
+                ]
         }
     };
 
     const onMapDidLoad = useCallback(event => {
         const map = event.target;
         map.setTerrain({source: 'mapbox-dem', exaggeration: 5});
+
+        console.log(Brownfields);
       }, []);
 
     return (
@@ -105,7 +142,7 @@ export default function Map() {
             mapboxApiAccessToken={accessToken} 
             onViewportChange={nextViewport => setViewport(nextViewport)}
             onLoad={onMapDidLoad}
-            // mapStyle="mapbox://styles/mapbox/satellite-v9"
+            mapStyle={'mapbox://styles/imnotjohn/ckuhsj2db8d2u17mkddjxft02'}
             {...viewport}>
                 <Source {...terrainStyles} />
                 <Layer {...skyLayer} />
@@ -117,6 +154,9 @@ export default function Map() {
                 </Source>
                 <Source type="geojson" data={crudeOilPipelines}>
                     <Layer {...crudeOilLayerStyles} />
+                </Source> 
+                <Source type="geojson" data={Brownfields}>
+                    <Layer {...BrownfieldsLayerStyles} />
                 </Source>
         </MapGL>
     )
