@@ -10,15 +10,15 @@
     align-items: flex-start;
     background-color: #000;
     border-radius: 0.3em;
-    bottom: 3em;
+    /* bottom: 3em; */
     display: flex;
     flex-direction: column;
     height: 3em;
     justify-content: center;
-    left: 5em;
+    /* left: 5em; */
     overflow: hidden;
     position: absolute;
-    opacity: 0.85;
+    opacity: 0.75;
     width: 300px;
     z-index: 100;
 }

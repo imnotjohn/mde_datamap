@@ -13,10 +13,14 @@ import './Map.css';
 export default function Map(props) {
     const {mapStyle, accessToken} = props;
 
-    let [hoverInfo, setHoverInfo] = useState({
-        name: 'Tribal Name',
-        area: '0.0',
-    });
+    // test
+    // note: layer visibility is: 'visible' || 'none'
+    let [petroleumLayerVisibility, togglePetroleumLayerVisibility] = useState('visible');
+    let [crudeLayerVisibility, toggleCrudeLayerVisibility] = useState('visible');
+    let [brownFieldsLayerVisibility, toggleBrownFieldsLayerVisibility] = useState('visible');
+    // end test
+
+    let [hoverInfo, setHoverInfo] = useState(null);
     let [viewport, setViewport] = useState({
             bearing: 0,
             width: "100vw",
@@ -25,8 +29,8 @@ export default function Map(props) {
             longitude: -99.7129, // center of US
             minZoom: 3, // represents zoom out
             maxZoom: 18, // represents zoom in    
-            pitch: 30,
-            zoom: 5,
+            pitch: 25,
+            zoom: 4.75,
     });
     
     const terrainStyles = {
@@ -77,14 +81,15 @@ export default function Map(props) {
         }
     };
 
-    const petroleumLayerStyles = {
+    const petroleumLayerVisibilityStyles = {
         id: "petrol-line",
         type: "line",
         paint: {
-            "line-color": "#FF0DEF",
-            //FF6700
-            "line-opacity": 0.5,
-            "line-width": 2,
+            "line-color": "dodgerblue",
+            // #FF6700
+            // #FF0DEF
+            "line-opacity": 0.6,
+            "line-width": 1.3,
         }
     };
 
@@ -94,8 +99,8 @@ export default function Map(props) {
         paint: {
             "line-color": "orange",
             //B026FF
-            "line-opacity": 0.5,
-            "line-width": 2,
+            "line-opacity": 0.6,
+            "line-width": 1.3,
         }
     };
 
@@ -104,7 +109,7 @@ export default function Map(props) {
         type: "circle",
         paint: {
             "circle-color": "#ffff00",
-            "circle-opacity": 0.8,
+            "circle-opacity": 0.45,
             "circle-radius" : ["interpolate",
                     ["linear"], 
                     ["zoom"],
@@ -128,12 +133,10 @@ export default function Map(props) {
         }
     };
 
-    const onMapDidLoad = useCallback(event => {
+    const onMapDidLoad = useCallback( (event) => {
         const map = event.target;
         map.setTerrain({source: 'mapbox-dem', exaggeration: 5});
-
-        console.log(Brownfields);
-      }, []);
+    }, []);
 
     // handle mouse onHover events
     const onHover = useCallback( (event) => {
@@ -146,7 +149,7 @@ export default function Map(props) {
     let area;
     if (hoveredFeature) {
         name = features[0].properties.namelsad;
-        area = (turf.area(features[0].geometry) / 2590000).toFixed(2);
+        area = (turf.area(features[0].geometry) / 2590000).toFixed(0);
     } 
 
     setHoverInfo(
@@ -155,12 +158,41 @@ export default function Map(props) {
             feature: hoveredFeature,
             x: offsetX,
             y: offsetY,
-            name: name,
-            area: area,
+            name: name ?? 'Tribal Name',
+            area: area ?? '0.000',
             }
         : null
     );
     }, []);
+
+    // test toggle layer visibility
+    const toggleLayerVisibility = (event) => {
+        const id = event.target.id;
+
+        switch(id) {
+            case 'petroleum-click':
+                if (petroleumLayerVisibility === 'visible') {
+                    togglePetroleumLayerVisibility('none');
+                } else {
+                    togglePetroleumLayerVisibility('visible');
+                }
+                break;
+            case 'crude-click':
+                if (crudeLayerVisibility === 'visible') {
+                    toggleCrudeLayerVisibility('none');
+                } else {
+                    toggleCrudeLayerVisibility('visible');
+                }    
+                break;
+            default:
+                if (brownFieldsLayerVisibility === 'visible') {
+                    toggleBrownFieldsLayerVisibility('none');
+                } else {
+                    toggleBrownFieldsLayerVisibility('visible');
+                }
+                break;
+        }
+    }
 
     return (
         <>
@@ -177,22 +209,27 @@ export default function Map(props) {
                     <Layer {...tribalLandsLayerStyles} />
                 </Source>
                 <Source type="geojson" data={petroleumPipelines}>
-                    <Layer {...petroleumLayerStyles} />
+                    <Layer {...petroleumLayerVisibilityStyles} visibility={petroleumLayerVisibility} />
                 </Source>
                 <Source type="geojson" data={crudeOilPipelines}>
-                    <Layer {...crudeOilLayerStyles} />
+                    <Layer {...crudeOilLayerStyles} visibility={crudeLayerVisibility} />
                 </Source> 
                 <Source type="geojson" data={Brownfields}>
-                    <Layer {...BrownfieldsLayerStyles} />
+                    <Layer {...BrownfieldsLayerStyles} visibility={brownFieldsLayerVisibility} />
                 </Source>
                 
         </MapGL>
-            {hoverInfo && (
-                <div className="Tooltip">
-                    <div className="tribeName">{hoverInfo.name}</div>
-                    <div className="miscInfo">Land Area <span> [ mi<sup>2 </sup> ]</span>: {hoverInfo.area}</div>
-                </div>
-                )}
+        {/* <div className='Controller'>
+            <button id="petroleum-click" onClick={toggleLayerVisibility}>1</button>
+            <button id="crude-click" onClick={toggleLayerVisibility}>2</button>
+            <button id="brownfields-click" onClick={toggleLayerVisibility}>3</button>
+        </div> */}
+        {hoverInfo && (
+            <div className="Tooltip" style={{left: hoverInfo.x, top: hoverInfo.y}}>
+                <div className="tribeName">{hoverInfo.name}</div>
+                <div className="miscInfo">Land Area <span> [ mi<sup>2 </sup> ]</span>:  {hoverInfo.area}</div>
+            </div>
+        )}
         </>
     )
 }
