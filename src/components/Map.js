@@ -144,7 +144,7 @@ export default function Map(props) {
         features,
         srcEvent: {offsetX, offsetY}
     } = event;
-    const hoveredFeature = features[0] && features[0].properties;
+    const hoveredFeature = features[0] && features[0].properties.namelsad;
     let name;
     let area;
     if (hoveredFeature) {
@@ -158,8 +158,8 @@ export default function Map(props) {
             feature: hoveredFeature,
             x: offsetX,
             y: offsetY,
-            name: name ?? 'Tribal Name',
-            area: area ?? '0.000',
+            name: name,
+            area: area,
             }
         : null
     );
