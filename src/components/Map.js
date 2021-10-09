@@ -7,15 +7,11 @@ import petroleumPipelines from '../data/petroleumproduct_pipelines_nov2014.json'
 import crudeOilPipelines from '../data/crudeoil_pipelines_nov2014.json';
 import Brownfields from '../data/re_atlas-epa_brownfields.json';
 
-// test
 import './Map.css';
-export default function Map() {
-    const accessToken = "pk.eyJ1IjoiaW1ub3Rqb2huIiwiYSI6ImNqZ3RzNjdhdjB2a20ycXE5dHR3ODY2MGcifQ.mEpkk9ZAI1ncdwAOVDdYdw";
 
-    // let [tribalLandIsVisible, toggleTribalLandIsVisible] = useState(true);
-    // let [petroleumIsVisible, togglePetroleumIsVisible] = useState(true);
-    // let [crudeOilIsVisible, toggleCrudeOilIsVisible] = useState(true);
-    // let [BrownfieldsIsVisible, toggleBrownfieldsIsVisible] = useState(true);
+export default function Map(props) {
+    // const accessToken = "pk.eyJ1IjoiaW1ub3Rqb2huIiwiYSI6ImNqZ3RzNjdhdjB2a20ycXE5dHR3ODY2MGcifQ.mEpkk9ZAI1ncdwAOVDdYdw";
+    const {mapStyle, accessToken} = props;
 
     let [viewport, setViewport] = useState({
             bearing: 0,
@@ -23,10 +19,8 @@ export default function Map() {
             height: "100vh",
             latitude: 37.7577,
             longitude: -122.4376,
-            // represents zoom out:
-            minZoom: 3,
-            // represents zoom in:
-            maxZoom: 18,    
+            minZoom: 3, // represents zoom out
+            maxZoom: 18, // represents zoom in    
             pitch: 70,
             zoom: 8,
     });
@@ -142,7 +136,8 @@ export default function Map() {
             mapboxApiAccessToken={accessToken} 
             onViewportChange={nextViewport => setViewport(nextViewport)}
             onLoad={onMapDidLoad}
-            mapStyle={'mapbox://styles/imnotjohn/ckuhsj2db8d2u17mkddjxft02'}
+            // mapStyle={'mapbox://styles/imnotjohn/ckuhsj2db8d2u17mkddjxft02'}
+            mapStyle={mapStyle}
             {...viewport}>
                 <Source {...terrainStyles} />
                 <Layer {...skyLayer} />
