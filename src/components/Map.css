@@ -5,3 +5,46 @@
     height: 100vh;
     width: 100vw;
 }
+
+.Tooltip {
+    align-items: flex-start;
+    background-color: #000;
+    border-radius: 0.3em;
+    bottom: 3em;
+    display: flex;
+    flex-direction: column;
+    height: 3em;
+    justify-content: center;
+    left: 5em;
+    overflow: hidden;
+    position: absolute;
+    opacity: 0.85;
+    width: 300px;
+    z-index: 100;
+}
+
+.tribeName {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    font-size: 0.4em;
+    font-weight: 800;
+    margin-left: 25px;
+    min-height: 2em;
+    width: 100%;
+}
+
+.miscInfo {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    font-size: 0.3em;
+    font-weight: 400;
+    margin-left: 25px;
+    min-height: 2.5em;
+    width: 100%;
+}
+
+.miscInfo span {
+    font-size: .9em;
+}

@@ -13,7 +13,7 @@ export default class App extends Component {
 
   render() {
     return (
-        <div className="App">\
+        <div className="App">
           <Map accessToken={ACCESS_TOKEN} mapStyle={MAP_STYLE} />
         </div>
       );

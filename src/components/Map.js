@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {useState, useCallback} from 'react';
 import '../App.css';
+import * as turf from '@turf/turf';
 import MapGL, {Layer, Source} from 'react-map-gl';
 import tribalLands from '../data/tribal-geojson.json';
 import petroleumPipelines from '../data/petroleumproduct_pipelines_nov2014.json';
@@ -10,19 +11,22 @@ import Brownfields from '../data/re_atlas-epa_brownfields.json';
 import './Map.css';
 
 export default function Map(props) {
-    // const accessToken = "pk.eyJ1IjoiaW1ub3Rqb2huIiwiYSI6ImNqZ3RzNjdhdjB2a20ycXE5dHR3ODY2MGcifQ.mEpkk9ZAI1ncdwAOVDdYdw";
     const {mapStyle, accessToken} = props;
 
+    let [hoverInfo, setHoverInfo] = useState({
+        name: 'Tribal Name',
+        area: '0.0',
+    });
     let [viewport, setViewport] = useState({
             bearing: 0,
             width: "100vw",
             height: "100vh",
-            latitude: 37.7577,
-            longitude: -122.4376,
+            latitude: 37.0902, // center of US
+            longitude: -99.7129, // center of US
             minZoom: 3, // represents zoom out
             maxZoom: 18, // represents zoom in    
-            pitch: 70,
-            zoom: 8,
+            pitch: 30,
+            zoom: 5,
     });
     
     const terrainStyles = {
@@ -50,7 +54,7 @@ export default function Map(props) {
             "fill-color": "#FF0DEF",
             "fill-opacity": {
                 "stops":[
-                    [3,.7],
+                    [3,.5],
                     [18,.1]
                 ]
             }
@@ -131,13 +135,41 @@ export default function Map(props) {
         console.log(Brownfields);
       }, []);
 
+    // handle mouse onHover events
+    const onHover = useCallback( (event) => {
+    const {
+        features,
+        srcEvent: {offsetX, offsetY}
+    } = event;
+    const hoveredFeature = features[0] && features[0].properties;
+    let name;
+    let area;
+    if (hoveredFeature) {
+        name = features[0].properties.namelsad;
+        area = (turf.area(features[0].geometry) / 2590000).toFixed(2);
+    } 
+
+    setHoverInfo(
+        hoveredFeature
+        ? {
+            feature: hoveredFeature,
+            x: offsetX,
+            y: offsetY,
+            name: name,
+            area: area,
+            }
+        : null
+    );
+    }, []);
+
     return (
+        <>
         <MapGL 
             mapboxApiAccessToken={accessToken} 
             onViewportChange={nextViewport => setViewport(nextViewport)}
             onLoad={onMapDidLoad}
-            // mapStyle={'mapbox://styles/imnotjohn/ckuhsj2db8d2u17mkddjxft02'}
             mapStyle={mapStyle}
+            onHover={onHover}
             {...viewport}>
                 <Source {...terrainStyles} />
                 <Layer {...skyLayer} />
@@ -153,6 +185,14 @@ export default function Map(props) {
                 <Source type="geojson" data={Brownfields}>
                     <Layer {...BrownfieldsLayerStyles} />
                 </Source>
+                
         </MapGL>
+            {hoverInfo && (
+                <div className="Tooltip">
+                    <div className="tribeName">{hoverInfo.name}</div>
+                    <div className="miscInfo">Land Area <span> [ mi<sup>2 </sup> ]</span>: {hoverInfo.area}</div>
+                </div>
+                )}
+        </>
     )
 }
