@@ -156,15 +156,30 @@ export default function Map(props) {
     
     let name;
     let area;
-    const hoveredFeature = features[0] && (features[0].properties.namelsad || features[0].properties.site_name);
+    const hoveredFeature = features[0] && (features[0].properties.namelsad || features[0].properties.site_name || features[0].properties.opername);
 
     // test
     console.log(features[0]);
 
-    if (hoveredFeature) {
-        name = features[0].properties.namelsad ?? features[0].properties.site_name;
-        area = features[0].properties.program ? 'Program Type: ' +  features[0].properties.program : 'Land Area: ' + (turf.area(features[0].geometry) / 2590000).toFixed(0);
-    } 
+    if (features[0]) {
+        if (features[0].properties.site_name) {
+            name = features[0].properties.site_name;
+            area = 'Program Type: ' + features[0].properties.program;
+        }
+        if (features[0].properties.namelsad) {
+            name = features[0].properties.namelsad;
+            area = 'Land Area: ' + (turf.area(features[0].geometry) / 2590000).toFixed(0);
+        }
+        if (features[0].properties.opername) {
+            name = features[0].properties.pipename;
+            area = features[0].properties.opername;
+        }
+    }
+
+    // if (hoveredFeature) {
+    //     name = features[0].properties.namelsad ?? features[0].properties.site_name;
+    //     area = features[0].properties.program ? 'Program Type: ' +  features[0].properties.program : 'Land Area: ' + (turf.area(features[0].geometry) / 2590000).toFixed(0);
+    // } 
 
     setHoverInfo(
         hoveredFeature
