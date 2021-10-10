@@ -154,15 +154,12 @@ export default function Map(props) {
         srcEvent: {offsetX, offsetY}
     } = event;
     
-    // let name = features[0].properties.namelsad;
-    // let program = features[0].properties.program;
     let name;
     let area;
-    // const hoveredFeature = features[0] && features[0].properties.namelsad;
     const hoveredFeature = features[0] && (features[0].properties.namelsad || features[0].properties.site_name);
 
     // test
-    console.log(features[0] && features[0].properties);
+    console.log(features[0]);
 
     if (hoveredFeature) {
         name = features[0].properties.namelsad ?? features[0].properties.site_name;
