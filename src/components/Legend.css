@@ -1,26 +1,37 @@
 .Legend {
-    align-items: center;
+    align-items: flex-start;
     background-color: #000;
+    border-radius: 0.25em;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-bottom: 0.35em;
     opacity: 0.65;
     position: absolute;
     right: .75em;
     top: .75em;
-    width: 1em;
+    width: auto;
     z-index: 100;
 }
 
 .subcontainer {
     align-items: center;
-    background-color: #000;
-    display: flex;
+    display: inline-flex;
     flex-direction: row;
-    justify-content: center;
     height: 1em;
     margin-bottom: -.25em;
-    width: 1em;
+    width: auto;
+}
+
+.detail {
+    align-items: center;
+    display: inline-flex;
+    font-size: 0.35em;
+    height: 1.6em;
+    justify-content: center;
+    margin-left: 2em;
+    margin-right: 2em;
+    text-transform: capitalize;
 }
 
 .tribal, .brownfields, .emptydata, .petroleum, .crudeoil {
@@ -32,18 +43,33 @@
     z-index: 200;
 }
 
+.tribal {
+    align-items: center;
+    display: flex;
+    height: 15px;
+    justify-content: center;
+    margin-left: .55em;
+    margin-top: 4px;
+    width: 15px;
+}
+
 .brownfields {
     border-radius: 1em;
-    height: .6em;
-    width: .6em;
+    height: .45em;
+    margin-left: .55em;
+    width: .45em;
 }
 
 .emptydata {
     font-size: 0.625em;
+    margin-left: .955em;
 }
 
 .petroleum, .crudeoil {
-    font-size: 1.4em;
-    font-weight: 800;
-    padding-left: .555em;
+    align-items: center;
+    display: inline-flex;
+    font-size: 1.2em;
+    font-weight: 400;
+    justify-content: center;
+    margin-left: .25em;
 }
