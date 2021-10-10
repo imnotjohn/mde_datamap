@@ -13,12 +13,12 @@ import Legend from './Legend.js';
 import './Map.css';
 
 const COLORS = {
-    tribal: '#F30DCA',
+    tribal: '#fc00aa',
     //tribal: '#FF0DEF',
     brownfields: '#ffff00',
     emptydata: '#ffff00',
     petroleum: 'dodgerblue',
-    crudeoil: 'orange',
+    crudeoil: '#3CE9FF',
 };
 
 export default function Map(props) {
