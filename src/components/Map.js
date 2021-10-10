@@ -9,7 +9,16 @@ import crudeOilPipelines from '../data/crudeoil_pipelines_nov2014.json';
 import Brownfields from '../data/browns_no_zeros.json';
 import BrownfieldZeros from '../data/browns_zeros.json';
 
+import Legend from './Legend.js';
 import './Map.css';
+
+const COLORS = {
+    tribal: '#FF0DEF',
+    brownfields: '#ffff00',
+    emptydata: '#ffff00',
+    petroleum: 'dodgerblue',
+    crudeoil: 'orange',
+};
 
 export default function Map(props) {
     const {mapStyle, accessToken} = props;
@@ -56,7 +65,7 @@ export default function Map(props) {
         id: "point",
         type: "fill",
         paint: {
-            "fill-color": "#FF0DEF",
+            "fill-color": COLORS.tribal,
             "fill-opacity": {
                 "stops":[
                     [3,.5],
@@ -86,7 +95,7 @@ export default function Map(props) {
         id: "petrol-line",
         type: "line",
         paint: {
-            "line-color": "dodgerblue",
+            "line-color": COLORS.petroleum,
             // #FF6700
             // #FF0DEF
             "line-opacity": 0.6,
@@ -98,7 +107,7 @@ export default function Map(props) {
         id: "crude-line",
         type: "line",
         paint: {
-            "line-color": "orange",
+            "line-color": COLORS.crudeoil,
             //B026FF
             "line-opacity": 0.6,
             "line-width": 1.3,
@@ -109,7 +118,7 @@ export default function Map(props) {
         id: "brownfields",
         type: "circle",
         paint: {
-            "circle-color": "#ffff00",
+            "circle-color": COLORS.brownfields,
             "circle-opacity": 0.45,
             "circle-radius" : ["interpolate",
                     ["linear"], 
@@ -247,6 +256,7 @@ export default function Map(props) {
                 <div className="miscInfo">Land Area <span> [ mi<sup>2 </sup> ]</span>:  {hoverInfo.area}</div>
             </div>
         )}
+        <Legend colors={COLORS} />
         </>
     )
 }

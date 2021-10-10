@@ -1,0 +1,49 @@
+.Legend {
+    align-items: center;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0.65;
+    position: absolute;
+    right: .75em;
+    top: .75em;
+    width: 1em;
+    z-index: 100;
+}
+
+.subcontainer {
+    align-items: center;
+    background-color: #000;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    height: 1em;
+    margin-bottom: -.25em;
+    width: 1em;
+}
+
+.tribal, .brownfields, .emptydata, .petroleum, .crudeoil {
+    align-items: center;
+    display: flex;
+    height: .6em;
+    justify-content: center;
+    width: .6em;
+    z-index: 200;
+}
+
+.brownfields {
+    border-radius: 1em;
+    height: .6em;
+    width: .6em;
+}
+
+.emptydata {
+    font-size: 0.625em;
+}
+
+.petroleum, .crudeoil {
+    font-size: 1.4em;
+    font-weight: 800;
+    padding-left: .555em;
+}
