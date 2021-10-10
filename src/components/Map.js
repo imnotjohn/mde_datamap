@@ -153,12 +153,20 @@ export default function Map(props) {
         features,
         srcEvent: {offsetX, offsetY}
     } = event;
-    const hoveredFeature = features[0] && features[0].properties.namelsad;
+    
+    // let name = features[0].properties.namelsad;
+    // let program = features[0].properties.program;
     let name;
     let area;
+    // const hoveredFeature = features[0] && features[0].properties.namelsad;
+    const hoveredFeature = features[0] && (features[0].properties.namelsad || features[0].properties.site_name);
+
+    // test
+    console.log(features[0] && features[0].properties);
+
     if (hoveredFeature) {
-        name = features[0].properties.namelsad;
-        area = (turf.area(features[0].geometry) / 2590000).toFixed(0);
+        name = features[0].properties.namelsad ?? features[0].properties.site_name;
+        area = features[0].properties.program ? 'Program Type: ' +  features[0].properties.program : 'Land Area: ' + (turf.area(features[0].geometry) / 2590000).toFixed(0);
     } 
 
     setHoverInfo(
@@ -244,7 +252,7 @@ export default function Map(props) {
         {hoverInfo && (
             <div className="Tooltip" style={{left: hoverInfo.x, top: hoverInfo.y}}>
                 <div className="tribeName">{hoverInfo.name}</div>
-                <div className="miscInfo">Land Area <span> [ mi<sup>2 </sup> ]</span>:  {hoverInfo.area}</div>
+                <div className="miscInfo">{hoverInfo.area}</div>
             </div>
         )}
         <Legend colors={COLORS} />
