@@ -6,7 +6,8 @@ import MapGL, {Layer, Source} from 'react-map-gl';
 import tribalLands from '../data/tribal-geojson.json';
 import petroleumPipelines from '../data/petroleumproduct_pipelines_nov2014.json';
 import crudeOilPipelines from '../data/crudeoil_pipelines_nov2014.json';
-import Brownfields from '../data/re_atlas-epa_brownfields.json';
+import Brownfields from '../data/browns_no_zeros.json';
+import BrownfieldZeros from '../data/browns_zeros.json';
 
 import './Map.css';
 
@@ -119,7 +120,7 @@ export default function Map(props) {
                         ["exponential", 2],
                         ["get", "mapped_acr"],
                         0, 1,
-                        1100000,1,
+                        1100000, 1,
                     ],
                     9,
                     [
@@ -132,6 +133,20 @@ export default function Map(props) {
                 ]
         }
     };
+
+    const BrownfieldZerosLayerStyles = {
+        id: "brownfieldszeros",
+        type: "symbol",
+        source: "points",
+        paint: {
+            "text-color": "#FFFF00",
+            "text-opacity": 0.45,
+        },
+        layout: {
+            "text-field": "✖", // lighter weight: ✕ 
+            "text-size": 20,
+        }
+    }
 
     const onMapDidLoad = useCallback( (event) => {
         const map = event.target;
@@ -217,7 +232,9 @@ export default function Map(props) {
                 <Source type="geojson" data={Brownfields}>
                     <Layer {...BrownfieldsLayerStyles} visibility={brownFieldsLayerVisibility} />
                 </Source>
-                
+                <Source type="geojson" data={BrownfieldZeros}>
+                    <Layer {...BrownfieldZerosLayerStyles} />
+                </Source>
         </MapGL>
         {/* <div className='Controller'>
             <button id="petroleum-click" onClick={toggleLayerVisibility}>1</button>
