@@ -189,6 +189,11 @@ export default function Map(props) {
     );
     }, []);
 
+    // handle mouse move events
+    const onMouseMove = useCallback( (event) => {
+        console.log(JSON.stringify(event.lngLat));
+    })
+
     // test toggle layer visibility
     const toggleLayerVisibility = (event) => {
         const id = event.target.id;
@@ -226,6 +231,7 @@ export default function Map(props) {
             onLoad={onMapDidLoad}
             mapStyle={mapStyle}
             onHover={onHover}
+            onMouseMove={onMouseMove}
             {...viewport}>
                 <Source {...terrainStyles} />
                 <Layer {...skyLayer} />
