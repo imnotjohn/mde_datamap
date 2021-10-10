@@ -13,7 +13,8 @@ import Legend from './Legend.js';
 import './Map.css';
 
 const COLORS = {
-    tribal: '#FF0DEF',
+    tribal: '#F30DCA',
+    //tribal: '#FF0DEF',
     brownfields: '#ffff00',
     emptydata: '#ffff00',
     petroleum: 'dodgerblue',
@@ -68,26 +69,10 @@ export default function Map(props) {
             "fill-color": COLORS.tribal,
             "fill-opacity": {
                 "stops":[
-                    [3,.5],
-                    [18,.1]
+                    [3,.6],
+                    [18,.01]
                 ]
             }
-            //"fill-opacity": ["interpolate",
-            //["linear"], 
-            //["zoom"],
-            //3,
-            //[
-           //     "interpolate",
-            //    ["linear"],
-            //    .7,
-            //],
-            //18,
-            //[
-            //    "interpolate",
-            //    ["linear"],
-            //    .1,
-            //],
-        //]
         }
     };
 
