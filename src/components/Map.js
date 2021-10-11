@@ -1,14 +1,15 @@
 import React from 'react';
-import {useState, useCallback} from 'react';
+import {useEffect, useState, useCallback} from 'react';
 import '../App.css';
 import * as turf from '@turf/turf';
-import MapGL, {Layer, Source} from 'react-map-gl';
+import MapGL, {Layer, Source, FlyToInterpolator} from 'react-map-gl';
 import tribalLands from '../data/tribal-geojson.json';
 import petroleumPipelines from '../data/petroleumproduct_pipelines_nov2014.json';
 import crudeOilPipelines from '../data/crudeoil_pipelines_nov2014.json';
 import Brownfields from '../data/browns_no_zeros.json';
 import BrownfieldZeros from '../data/browns_zeros.json';
 
+import * as d3 from 'd3-ease';
 import Legend from './Legend.js';
 import './Map.css';
 
@@ -26,9 +27,9 @@ export default function Map(props) {
 
     // test
     // note: layer visibility is: 'visible' || 'none'
-    let [petroleumLayerVisibility, togglePetroleumLayerVisibility] = useState('visible');
-    let [crudeLayerVisibility, toggleCrudeLayerVisibility] = useState('visible');
-    let [brownFieldsLayerVisibility, toggleBrownFieldsLayerVisibility] = useState('visible');
+    // let [petroleumLayerVisibility, togglePetroleumLayerVisibility] = useState('visible');
+    // let [crudeLayerVisibility, toggleCrudeLayerVisibility] = useState('visible');
+    // let [brownFieldsLayerVisibility, toggleBrownFieldsLayerVisibility] = useState('visible');
     // end test
 
     let [hoverInfo, setHoverInfo] = useState(null);
@@ -142,10 +143,87 @@ export default function Map(props) {
         }
     }
 
+    const useKeyPress = (targetKey) => {
+        // State for keeping track of whether key is pressed
+        const [keyPressed, setKeyPressed] = useState(false);
+        // If pressed key is our target key then set to true
+        function downHandler({ key }) {
+          if (key === targetKey) {
+            setKeyPressed(true);
+            console.log(targetKey);
+
+            switch(key) {
+                case '1':
+                    setViewport({
+                        ...viewport,
+                        longitude: -74.1,
+                        latitude: 40.7,
+                        zoom: 14,
+                        transitionDuration: 5000,
+                        transitionInterpolator: new FlyToInterpolator(),
+                        transitionEasing: d3.easeCubic                        
+                    })
+                    break;
+                case '2':
+                    setViewport({
+                        bearing: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        latitude: 37.0902, // center of US
+                        longitude: -99.7129, // center of US
+                        minZoom: 3, // represents zoom out
+                        maxZoom: 18, // represents zoom in    
+                        pitch: 25,
+                        transitionDuration: 5000,
+                        transitionInterpolator: new FlyToInterpolator(),
+                        transitionEasing: d3.easeCubic,
+                        zoom: 4.75,
+                    })
+                    break;
+                case '3':
+                    setViewport({
+                        ...viewport,
+                        longitude: -74.1,
+                        latitude: 40.7,
+                        zoom: 14,
+                        bearing: 30,
+                        transitionDuration: 5000,
+                        transitionInterpolator: new FlyToInterpolator(),
+                        transitionEasing: d3.easeCubic                        
+                    })
+                    break;
+                default:
+                    break;
+            }
+          }
+        }
+        // If released key is our target key then set to false
+        const upHandler = ({ key }) => {
+          if (key === targetKey) {
+            setKeyPressed(false);
+          }
+        };
+        // Add event listeners
+        useEffect(() => {
+          window.addEventListener("keydown", downHandler);
+          window.addEventListener("keyup", upHandler);
+          // Remove event listeners on cleanup
+          return () => {
+            window.removeEventListener("keydown", downHandler);
+            window.removeEventListener("keyup", upHandler);
+          };
+        }, []); // Empty array ensures that effect is only run on mount and unmount
+        return keyPressed;
+    }
+
     const onMapDidLoad = useCallback( (event) => {
         const map = event.target;
         map.setTerrain({source: 'mapbox-dem', exaggeration: 5});
     }, []);
+
+    const site1 = useKeyPress("1");
+    const site2 = useKeyPress("2");
+    const site3 = useKeyPress("3");
 
     // handle mouse onHover events
     const onHover = useCallback( (event) => {
@@ -199,33 +277,33 @@ export default function Map(props) {
     })
 
     // test toggle layer visibility
-    const toggleLayerVisibility = (event) => {
-        const id = event.target.id;
+    // const toggleLayerVisibility = (event) => {
+    //     const id = event.target.id;
 
-        switch(id) {
-            case 'petroleum-click':
-                if (petroleumLayerVisibility === 'visible') {
-                    togglePetroleumLayerVisibility('none');
-                } else {
-                    togglePetroleumLayerVisibility('visible');
-                }
-                break;
-            case 'crude-click':
-                if (crudeLayerVisibility === 'visible') {
-                    toggleCrudeLayerVisibility('none');
-                } else {
-                    toggleCrudeLayerVisibility('visible');
-                }    
-                break;
-            default:
-                if (brownFieldsLayerVisibility === 'visible') {
-                    toggleBrownFieldsLayerVisibility('none');
-                } else {
-                    toggleBrownFieldsLayerVisibility('visible');
-                }
-                break;
-        }
-    }
+    //     switch(id) {
+    //         case 'petroleum-click':
+    //             if (petroleumLayerVisibility === 'visible') {
+    //                 togglePetroleumLayerVisibility('none');
+    //             } else {
+    //                 togglePetroleumLayerVisibility('visible');
+    //             }
+    //             break;
+    //         case 'crude-click':
+    //             if (crudeLayerVisibility === 'visible') {
+    //                 toggleCrudeLayerVisibility('none');
+    //             } else {
+    //                 toggleCrudeLayerVisibility('visible');
+    //             }    
+    //             break;
+    //         default:
+    //             if (brownFieldsLayerVisibility === 'visible') {
+    //                 toggleBrownFieldsLayerVisibility('none');
+    //             } else {
+    //                 toggleBrownFieldsLayerVisibility('visible');
+    //             }
+    //             break;
+    //     }
+    // }
 
     return (
         <>
@@ -243,13 +321,13 @@ export default function Map(props) {
                     <Layer {...tribalLandsLayerStyles} />
                 </Source>
                 <Source type="geojson" data={petroleumPipelines}>
-                    <Layer {...petroleumLayerVisibilityStyles} visibility={petroleumLayerVisibility} />
+                    <Layer {...petroleumLayerVisibilityStyles} />
                 </Source>
                 <Source type="geojson" data={crudeOilPipelines}>
-                    <Layer {...crudeOilLayerStyles} visibility={crudeLayerVisibility} />
+                    <Layer {...crudeOilLayerStyles} />
                 </Source> 
                 <Source type="geojson" data={Brownfields}>
-                    <Layer {...BrownfieldsLayerStyles} visibility={brownFieldsLayerVisibility} />
+                    <Layer {...BrownfieldsLayerStyles} />
                 </Source>
                 <Source type="geojson" data={BrownfieldZeros}>
                     <Layer {...BrownfieldZerosLayerStyles} />
