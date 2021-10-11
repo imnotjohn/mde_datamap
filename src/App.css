@@ -1,11 +1,16 @@
 .App {
+  align-items: center;
   background-color: #282c34;
-  text-align: center;
-  min-height: 100vh;
+  color: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+  text-align: center;
+}
+
+.App::-webkit-scrollbar {
+  display: none;
 }

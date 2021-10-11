@@ -158,8 +158,7 @@ export default function Map(props) {
     let area;
     const hoveredFeature = features[0] && (features[0].properties.namelsad || features[0].properties.site_name || features[0].properties.opername);
 
-    // test
-    console.log(features[0]);
+    // console.log(features[0]);
 
     if (features[0]) {
         if (features[0].properties.site_name) {
@@ -168,11 +167,11 @@ export default function Map(props) {
         }
         if (features[0].properties.namelsad) {
             name = features[0].properties.namelsad;
-            area = 'Land Area: ' + (turf.area(features[0].geometry) / 2590000).toFixed(0);
+            area = 'Land Area: ' + (turf.area(features[0].geometry) / 2590000).toFixed(0) + ' square miles';
         }
         if (features[0].properties.opername) {
             name = features[0].properties.pipename;
-            area = features[0].properties.opername;
+            area = 'Operator: ' + features[0].properties.opername;
         }
     }
 
@@ -187,7 +186,7 @@ export default function Map(props) {
             feature: hoveredFeature,
             x: offsetX,
             y: offsetY,
-            name: name,
+            name: name.toLowerCase(),
             area: area,
             }
         : null

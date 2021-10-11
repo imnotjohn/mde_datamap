@@ -25,6 +25,7 @@
 
 .detail {
     align-items: center;
+    color: white;
     display: inline-flex;
     font-size: 0.35em;
     height: 1.6em;
