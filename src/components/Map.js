@@ -156,8 +156,10 @@ export default function Map(props) {
                 case '1':
                     setViewport({
                         ...viewport,
+                        bearing: 70,
                         longitude: -74.1,
                         latitude: 40.7,
+                        pitch: 45,
                         zoom: 14,
                         transitionDuration: 5000,
                         transitionInterpolator: new FlyToInterpolator(),
@@ -183,10 +185,11 @@ export default function Map(props) {
                 case '3':
                     setViewport({
                         ...viewport,
-                        longitude: -74.1,
-                        latitude: 40.7,
-                        zoom: 14,
+                        longitude: -110.49409155,
+                        latitude: 36.420972048,
+                        zoom: 9,
                         bearing: 30,
+                        pitch: 60,
                         transitionDuration: 5000,
                         transitionInterpolator: new FlyToInterpolator(),
                         transitionEasing: d3.easeCubic                        
