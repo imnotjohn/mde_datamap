@@ -70,9 +70,9 @@ export default function Map(props) {
             "fill-color": COLORS.tribal,
             "fill-opacity": {
                 "stops":[
-                    [3,.6],
+                    [3, .65],
                     [18,.01]
-                ]
+                ],
             }
         }
     };
